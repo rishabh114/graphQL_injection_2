@@ -1,13 +1,27 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'graphQL_injection_2';
+export class AppComponent implements OnInit {
+  query = `{ hello }`;
+  data: any;
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.sendQuery();
+  }
+
+  sendQuery() {
+    this.http.post('/graphql', { query: this.query })
+      .subscribe(response => {
+        this.data = response;
+      }, error => {
+        console.error('Error:', error);
+      });
+  }
 }
